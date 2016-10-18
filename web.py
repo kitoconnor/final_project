@@ -15,14 +15,20 @@ def about(): #this needs to be right under the @app line
 def results():
 	#get keyword that is inputted on the webpage
 	keyword = request.values.get('gif_keyword')
-	#create a string for the header to display at the top of the search page
-	header = "GIF's tagged with ''{}'':".format(keyword)
-	#setup giphy function 
-	g = giphypop.Giphy()
-	#set up list of results returned from giphy search using keyword
-	results = g.search(keyword)
-	#set up the page, passing along the giphy list, results, and the header string, header
-	return render_template('gifresults.html',results=results,header=header)
+	#error handling if no keyword is entered
+	if keyword == "": 
+		header = "You didn't enter a keyword! Click below to try again."
+		return render_template('gifresults.html',header=header)
+	else:
+		#setup giphy function 
+		g = giphypop.Giphy()
+		#set up list of results returned from giphy search using keyword and create a header to display at top of page
+		results = g.search(keyword)
+		if len(list(results)) == 0: header = "No results were found for the keyword ''{}''! Click below to try again.".format(keyword)
+		else: header = "GIFs tagged with ''{}'':".format(keyword)
+		#again grab the list of results, set up the page, passing along the giphy list, results, and the header string, header
+		results = g.search(keyword)
+		return render_template('gifresults.html',results=results,header=header)
 
 
 app.run(debug=True)
