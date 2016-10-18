@@ -1,30 +1,28 @@
 from flask import Flask, render_template, request
-from googlefinance import getQuotes
+import giphypop
 app = Flask(__name__)
-
-
-def get_stock_price(ticker):
-	quotes = getQuotes(ticker)
-	price = quotes[0]['LastTradePrice']
-	return "The price of {} is {}".format(ticker,price)
-
 
 
 @app.route('/')
 def index(): #this needs to be right under the @app line
-	name = request.values.get('name')
-	greeting = "HELLO {} you amazaing person!".format(name)
-	return render_template('index.html', greeting=greeting)
+		return render_template('index.html')
 
 @app.route('/about')
 def about(): #this needs to be right under the @app line
 	return render_template('about.html')
 
-@app.route('/results')
+@app.route('/gifresults')
 def results():
-	stock = request.values.get('stock')
-	price = get_stock_price(stock)
-	return render_template('results.html',price=price)
+	#get keyword that is inputted on the webpage
+	keyword = request.values.get('gif_keyword')
+	#create a string for the header to display at the top of the search page
+	header = "GIF's tagged with ''{}'':".format(keyword)
+	#setup giphy function 
+	g = giphypop.Giphy()
+	#set up list of results returned from giphy search using keyword
+	results = g.search(keyword)
+	#set up the page, passing along the giphy list, results, and the header string, header
+	return render_template('gifresults.html',results=results,header=header)
 
 
 app.run(debug=True)
