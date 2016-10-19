@@ -1,8 +1,8 @@
 import os
-from flask import Flask, render_template, request
 import giphypop
-app = Flask(__name__)
+from flask import Flask, render_template, request
 
+app = Flask(__name__)
 
 @app.route('/')
 def index(): #this needs to be right under the @app line
